@@ -93,7 +93,7 @@ void ConsoleHippoBrain::printActivations(const std::vector<NC*>& list, size_t pr
 			formatted.append("\n ");
 
 		for (size_t col = 0; col < neuronsPerRow; ++col) {
-			const int i = line * neuronsPerRow + col;
+			const size_t i = line * neuronsPerRow + col;
 			if (i >= total) {
 				line = -1;
 				break;

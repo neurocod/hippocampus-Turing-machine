@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+*Copilot*
+build
 
 # Compiled Object files
 *.slo
@@ -16,6 +18,7 @@
 
 # Debugger Files
 *.pdb
+.vs
 
 # Compiled Dynamic libraries
 *.so
