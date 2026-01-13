@@ -27,11 +27,6 @@ void Brain::cycleUntillEnough() {
 }
 
 void Brain::inferenceStep() {
-#ifdef _DEBUG
-	static int counter = 0;
-	if (1 == counter++)
-		writeActivationsToFile();
-#endif
 	if (_return->nIn.isActive()) {
 		callReturn();
 	} else {
@@ -127,7 +122,7 @@ void Brain::memorizeCurrentState() {
 		if (nc->nIn.isActive() && !nc->_isSystem)
 			linkUp(nc, _hippo);
 	}
-	_hippo->nIn.thr = _hippo->lUpIn.size();
+	_hippo->nIn.thr = (float)_hippo->lUpIn.size();
 	if (_hippo->lTIn.size() > 0)
 		_hippo->nIn.thr += 1.f;
 	if (0 == _hippo->nIn.thr)

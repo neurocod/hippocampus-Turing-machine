@@ -2,10 +2,14 @@
 #include "Tokenizer.h"
 
 void printHelp() {
-	std::cout << "Type 'quit' to quit, type chess moves in 'E2 E4' format, "
-        "'enumerate' to enumerate all possible chess moves for current board, "
-        "use `noprint` and `print` to print board after each move, "
-        "input any tokens and 'count a' or 'count b' commands to count them\n";
+	std::cout << R"(Type 'quit' to quit,
+'repr' to see output embedding aimed for target nets.
+Other commands are processed by Neural Net directly:
+type chess moves in 'E2 E4' format,
+'print' to print chessboard after each move,
+'noprint' to stop chessboard printing
+'enumerate' to enumerate all possible chess moves for current board,
+input any tokens and 'count a' or 'count b' commands to count them.)";
 }
 int main(int argc, char* argv[]) {
     std::string input;
