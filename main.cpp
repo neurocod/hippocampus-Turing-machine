@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
             return 0;
         }
     }
+
 	ChessboardNN brain;
     brain._remainingInput = tokens;
     brain.inferenceCycle();

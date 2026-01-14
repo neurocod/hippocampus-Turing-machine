@@ -20,7 +20,7 @@ void Brain::inferenceCycle() {
 	while (!_needExit)
 		inferenceStep();
 }
-void Brain::cycleUntillEnough() {
+void Brain::cycleUntillEnough() { // used in Unit Testing
 	do {
 		inferenceStep();
 	} while (_activeChanged && !_needExit);

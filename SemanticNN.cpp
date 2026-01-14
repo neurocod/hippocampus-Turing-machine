@@ -4,8 +4,6 @@
 #include <fstream>
 using namespace std;
 
-using Brain = SemanticNN;
-
 SemanticNN::SemanticNN(std::initializer_list<char> types,
 	std::initializer_list<float> thresholds,
 	std::initializer_list<LinkInitializer> linksTime,
@@ -37,14 +35,14 @@ SemanticNN::SemanticNN(std::initializer_list<char> types,
 SemanticNN::~SemanticNN() {
 	_clusters.deleteAllByEnd();
 }
-NC* Brain::newNC(NC::Type type) {
+NC* SemanticNN::newNC(NC::Type type) {
 	// production should use optimized version like intrusive containers (instead of operator new)
 	NC* ret = new NC(type, _nextFreeId++, *this);
 	_clusters.push_back(ret);
 
 	return ret;
 }
-bool Brain::removeNC(NC* nc) {
+bool SemanticNN::removeNC(NC* nc) {
 	if (!nc)
 		return false;
 	assert(this == &nc->_brain && !_clusters.empty());
@@ -73,7 +71,7 @@ bool Brain::removeNC(NC* nc) {
 	_clusters.erase(found);
 	return true;
 }
-NC* Brain::byId(bioId id)const {
+NC* SemanticNN::byId(bioId id)const {
 	if (id >= _nextFreeId || _clusters.empty())
 		return nullptr;
 	// optimization for when id's go as contiguous block of ids
@@ -86,13 +84,13 @@ NC* Brain::byId(bioId id)const {
 		return *it;
 	return 0;
 }
-Link* Brain::linkTime(PNC from, PNC to) {
+Link* SemanticNN::linkTime(PNC from, PNC to) {
 	return new Link(from, to, from->lTOut, to->lTIn);
 }
-Link* Brain::linkUp(PNC from, PNC to) {
+Link* SemanticNN::linkUp(PNC from, PNC to) {
 	return new Link(from, to, from->lUpOut, to->lUpIn);
 }
-void Brain::writeActivationsToFile()const {
+void SemanticNN::writeActivationsToFile()const {
 	const std::string filepath = R"(c:\g\temp\activations.bin)";
 
 	// Ensure output directory exists (no-op if parent path is empty)
