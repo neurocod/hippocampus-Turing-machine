@@ -11,8 +11,11 @@ HippoBrain::HippoBrain(std::initializer_list<char> types,
 {
 }
 void HippoBrain::finalizeCreation() {
-	for (PNC nc : {_askLoadSensors, _return, _memorizeCurrentState})
+	for (PNC nc : {_askLoadSensors, _return, _memorizeCurrentState,
+		_hippoLeftEnd, _hippoRightEnd, _shiftLeft, _shiftRight, _strictTuringMode})
+	{
 		nc->_isSystem = true;
+	}
 	_askLoadSensors->nIn.activate();
 	_askLoadSensors->nPrev.activate();
 }
@@ -57,6 +60,8 @@ void Brain::inferenceStep() {
 
 	if (_shiftLeft->nPrev.isActive()) {
 		shiftLeft();
+	} else if (_shiftRight->nPrev.isActive()) {
+		shiftRight();
 	} else if (_activateMemory->nPrev.isActive()) {
 		// activate
 		for (Link* link : _hippo->lUpIn) {
@@ -127,10 +132,15 @@ void Brain::memorizeCurrentState() {
 		_hippo->nIn.thr += 1.f;
 	if (0 == _hippo->nIn.thr)
 		_hippo->nIn.thr = 1.f;
-	
-	NC* newHip = newNC(NC::TypeHippo);
-	linkTime(_hippo, newHip);
-	_hippo = newHip;
+
+	if (_strictTuringMode->nIn.isActive()) {
+		// in classic Turing machine, we only override current cell value without advance
+	} else {
+		// in biological implementation, new memory goes into it's own compartment, and we link it with older
+		NC* newHip = newNC(NC::TypeHippo);
+		linkTime(_hippo, newHip);
+		_hippo = newHip;
+	}
 }
 void Brain::callReturn() {
 	assert(chainOfThoughtsMode());
@@ -153,15 +163,37 @@ void Brain::callReturn() {
 	_return->nPrev.activate();
 }
 void Brain::shiftLeft() {
-	if (!_hippo) {
-		_hippoLeftEnd->nIn.activate();
+	if (!_hippo)
 		return;
-	}
 	PNC left = _hippo->prevNC();
 	if (!left) {
 		_hippoLeftEnd->nIn.activate();
-		return;
+		const bool useInfiniteTape = _strictTuringMode->nIn.isActive();
+		if (useInfiniteTape) {
+			left = newNC(NC::TypeHippo);
+			linkTime(left, _hippo);
+		} else {
+			return;
+		}
 	}
 	_hippo = left;
+	_activateMemory->nIn.activate();
+}
+
+void Brain::shiftRight() {
+	if (!_hippo)
+		return;
+	PNC right = _hippo->lastNextNC();
+	if (!right) {
+		_hippoRightEnd->nIn.activate();
+		const bool useInfiniteTape = _strictTuringMode->nIn.isActive();
+		if (useInfiniteTape) {
+			right = newNC(NC::TypeHippo);
+			linkTime(_hippo, right);
+		} else {
+			return;
+		}
+	}
+	_hippo = right;
 	_activateMemory->nIn.activate();
 }

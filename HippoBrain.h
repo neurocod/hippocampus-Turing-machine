@@ -18,14 +18,18 @@ protected:
 	PNC _return; // step hippocampus back + reset context to that step
 	PNC _hippo; // current pointer to the active cluster that reveices memories or recalls them
 	PNC _activateMemory; // recall memories from hippo
+	PNC _strictTuringMode; // active -> makes infinite memory tape, and memorizeCurrentState only writes 1 cell without advance
 	PNC _shiftLeft;
+	PNC _shiftRight;
 	PNC _hippoLeftEnd;
+	PNC _hippoRightEnd;
 	PNC _memorizeCurrentState;
 
 	void finalizeCreation();
 	bool isExceptionActive() const { return _return->nIn.isActive(); }
 	bool chainOfThoughtsMode() const { return !_askLoadSensors->nIn.isActive(); }
 	void shiftLeft();
+	void shiftRight();
 	void callReturn();
 	void memorizeCurrentState();
 };
