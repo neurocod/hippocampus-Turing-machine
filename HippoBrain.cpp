@@ -163,9 +163,7 @@ void Brain::callReturn() {
 	_return->nPrev.activate();
 }
 void Brain::shiftLeft() {
-	if (!_hippo)
-		return;
-	PNC left = _hippo->prevNC();
+	NC* left = _hippo ? _hippo->prevNC() : 0;
 	if (!left) {
 		_hippoLeftEnd->nIn.activate();
 		const bool useInfiniteTape = _strictTuringMode->nIn.isActive();
@@ -181,9 +179,7 @@ void Brain::shiftLeft() {
 }
 
 void Brain::shiftRight() {
-	if (!_hippo)
-		return;
-	PNC right = _hippo->lastNextNC();
+	NC* right = _hippo ? _hippo->lastNextNC() : 0;
 	if (!right) {
 		_hippoRightEnd->nIn.activate();
 		const bool useInfiniteTape = _strictTuringMode->nIn.isActive();

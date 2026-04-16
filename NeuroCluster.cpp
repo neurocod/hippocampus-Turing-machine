@@ -18,3 +18,8 @@ NC* NC::prevNC()const {
 	Link* link = *lTIn.begin();
 	return &link->_from;
 }
+NC* NC::lastNextNC()const {
+	if (lTOut.empty())
+		return nullptr;
+	return &lTOut.back()->_to;
+}

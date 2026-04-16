@@ -44,6 +44,7 @@ public:
 	NC(NC::Type type, bioId id, SemanticNN& brain);
 	~NC();
 	NC* prevNC()const;
+	NC* lastNextNC()const;
 
 	NeuronAT nIn; // input neuron for current step
 	NeuronA1 nPrev; // input from previous time steps
